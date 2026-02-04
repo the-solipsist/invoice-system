@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / Packaging
+dist/
+build/
+*.egg-info/
+
+# Virtual Environment (uv)
+.venv/
+venv/
+ENV/
+
+# Testing / Type Checking
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# IDEs / Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Project Logs
+logs/
+
+# Generated Output
+output/*.pdf
+output/legacy/
+
+# Private data (not for public repo)
+# Note: This repo includes SAMPLE data only
+# Real business data should never be committed
+
+# Output tracking - include YAML for reference
+# output/*.yaml is tracked (sanitized examples)
+
+# Scripts (one-off utilities, not part of core system)
+scripts/
+
+# Temporary files
+temp_output/
+*.tmp
+.DS_Store

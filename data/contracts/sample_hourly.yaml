@@ -1,0 +1,18 @@
+# Sample contract for demonstration
+# Generic hourly consulting agreement
+
+id: sample_hourly_contract
+client_id: client_sample_tech
+sender_id: consultant_bangalore
+bank_id: sample_bank
+work_sequence_number: '02'
+contact_id: contact1
+po_number: 'SAMPLE-PO-002'
+contract_ref: 'CONSULT-2024-002'
+service: Research and Analysis Services
+sac_code: '998399'
+billing_preset: rate
+contract_series: true
+billing_terms:
+  rate: 2500
+  unit_name: Hours

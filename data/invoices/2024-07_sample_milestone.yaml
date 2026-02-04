@@ -1,0 +1,8 @@
+# Sample Invoice - Milestone Payment
+# Synthetic data for demonstration - Export (USD)
+
+invoice_number: "SAMPLE-003"
+contract_id: "sample_milestone_contract"
+date: "2024-07-01"
+line_items:
+  - {date: "2024-07-01", description: "Phase 1: Research completion", amount: 5000}

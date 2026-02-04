@@ -1,0 +1,161 @@
+# config/billing.yaml
+
+# ==========================================
+# 1. PRICING FORMULAS (Math Primitives)
+# ==========================================
+pricing_formulas:
+  
+  # A. Simple Sum of Items
+  # Used for: Milestones, One-off Fees
+  simple_flat_fee:
+    components:
+      - type: "flat_rate"
+        id: "flat_rate_fee" 
+        # No 'amount' specified -> implies summing item amounts
+
+  # B. Simple Unit Rate
+  # Used for: Hourly Consulting, Per-Word Editing
+  simple_unit_rate:
+    components:
+      - type: "unit_rate"
+        id: "unit_rate_fee"
+        rate: "{rate}" # Supports contract-level rate
+        # No 'rate' specified -> implies using item rates
+
+  # C. Retainer + Excess
+  # Used for: Monthly Retainers with Overage
+  retainer_excess:
+    components:
+      - type: "flat_rate"
+        id: "retainer_fee"
+        amount: "{base_amount}" # From Contract Terms
+      
+      - type: "unit_rate"
+        id: "excess_fee"
+        rate: "{excess_rate}"   # From Contract Terms
+        min_quantity: "{threshold}"
+
+# ==========================================
+# 2. INVOICE PRESETS (Business Configurations)
+# ==========================================
+invoice_presets:
+
+  # ------------------------------------------
+  # Retainer Style
+  # ------------------------------------------
+  retainer:
+    formula_id: "retainer_excess"
+    display_title: "Invoice"
+    
+    work_table:
+      headers:
+        col1: "Assigned By"
+        col2: "Work Description"
+        col3: "{unit_name}"
+      columns: ["owner", "description", "quantity"]
+      unit_name: "Hours"
+
+    billing_table:
+      headers:
+        col1: "Billing Category"
+        col2: "Details"
+        col3: "Amount (in {currency})"
+      
+      row_templates:
+        retainer_fee:
+          label: "{billing_label}"
+          details: "{billing_details}"
+        excess_fee:
+          label: "{excess_label}"
+          details: "{qty} {units} @ {rate}/{unit} (Excess)"
+
+    defaults:
+      unit: "hour"
+      unit_name: "Hours"
+      threshold: 0
+      billing_label: "Monthly Retainer"
+      billing_details: "Fixed Monthly Fee"
+      excess_label: "Excess Hours"
+
+  # ------------------------------------------
+  # Unit Rate Style (Hourly, Words, etc.)
+  # ------------------------------------------
+  rate:
+    formula_id: "simple_unit_rate"
+    display_title: "Invoice"
+    
+    work_table:
+      headers:
+        col1: "Date"
+        col2: "Work Description"
+        col3: "{unit_name}"
+      columns: ["date", "description", "quantity"]
+      unit_name: "Hours"
+
+    billing_table:
+      headers:
+        col1: "Billing Item"
+        col2: "Calculation"
+        col3: "Amount (in {currency})"
+      
+      row_templates:
+        unit_rate_fee:
+          label: "{billing_label}"
+          details: "{qty} {units} @ {rate}/{unit}"
+
+    defaults:
+      unit: "hour"
+      unit_name: "Hours"
+      billing_label: "Fees"
+
+  # ------------------------------------------
+  # Flat Fee Style (Milestones, One-offs)
+  # ------------------------------------------
+  flat_fee:
+    formula_id: "simple_flat_fee"
+    display_title: "Invoice"
+    
+    work_table:
+      headers:
+        col1: "Date"
+        col2: "Description"
+      columns: ["date", "description"]
+      unit_name: ""
+
+    billing_table:
+      headers:
+        col1: "Billing Item"
+        col2: "Details"
+        col3: "Amount (in {currency})"
+      
+      row_templates:
+        flat_rate_fee:
+          label: "{label}"
+          details: "{details}"
+
+    defaults:
+      label: "Fee"
+      details: "Fixed Fee"
+
+  milestone:
+    formula_id: "simple_flat_fee"
+    display_title: "Invoice"
+    work_table:
+      headers:
+        col1: "Date Completed"
+        col2: "Work Description"
+      columns: ["date", "description"]
+      unit_name: ""
+    billing_table:
+      headers:
+        col1: "Billing Item"
+        col2: "Details"
+        col3: "Amount (in {currency})"
+      row_templates:
+        flat_rate_fee:
+          label: "{label}"
+          details: "{details}"
+    defaults:
+      label: "Milestone {number}"
+      details: "{description}"
+      description: "Fixed Fee"

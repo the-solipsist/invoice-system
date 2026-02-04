@@ -1,0 +1,17 @@
+# Sample bank accounts for demonstration
+# Replace with actual banking details in private usage
+
+sample_bank:
+  name: "Sample Bank"
+  account_name: "Demo Consulting Services Pvt. Ltd."
+  account_number: "1234567890"
+  ifsc: "SAMP0001234"
+  branch: "Sample Branch, New Delhi"
+  swift: "SAMPINBB"
+
+sample_bank_international:
+  name: "Sample International Bank"
+  account_name: "Demo Consulting Services Pvt. Ltd."
+  account_number: "INTL123456789"
+  swift: "INTLINBBXXX"
+  branch: "International Branch, Mumbai"

@@ -1,0 +1,294 @@
+@import url('https://fonts.googleapis.com/css2?family=Aboreto&family=Raleway:wght@300;400;500;600&display=swap');
+
+/* =========================================
+   1. GLOBAL SETTINGS (TWEAK HERE)
+   ========================================= */
+:root {
+    /* TYPOGRAPHY */
+    --font-primary: 'Raleway', sans-serif;
+    --font-header:  'Aboreto', serif;
+    --font-size:    8.5pt;
+    
+    /* SPACING & DENSITY */
+    --pad-y:        3px;      /* Vertical padding for rows */
+    --pad-x:        8px;      /* Horizontal padding for cells */
+    --spacer:       8px;      /* "Breathing room" below headers/above totals */
+    --header-pad-y: 5px;      /* Vertical padding inside the gray header bars */
+    --key-gap:      20px;     /* The gap between a "Key" (Label) and its "Value" */
+    
+    /* COLORS */
+    --bg-color:     #fffff5;  /* Ivory background */
+    --header-bg:    #d3d3d3;  /* Gray header bar */
+    --border-col:   #000000;
+    
+    /* COLUMN WIDTHS & ALIGNMENT */
+    --key-min-w:    90px;     /* Min width for first column anchors (aligned) */
+    --qty-min-w:    80px;     /* Min width for money/qty column */
+    --split-align:  50%;      /* The alignment line for the right-hand block (Tax/Recipient) */
+}
+
+@page {
+    size: A4;
+    margin: 0;
+}
+
+body {
+    font-family: var(--font-primary);
+    font-size: var(--font-size);
+    font-weight: 300;
+    background-color: var(--bg-color);
+    line-height: 1.15;
+    margin: 0;
+    padding: 2cm 1cm;
+    box-sizing: border-box;
+}
+
+/* =========================================
+   2. HEADER & LOGO
+   ========================================= */
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border: none;
+    font-family: var(--font-header);
+    font-size: 20pt;
+    padding-top: 1.5em;
+    margin-bottom: 0.5em;
+}
+
+.invoice-text {
+    font-family: var(--font-header);
+    font-size: 20pt;
+    letter-spacing: 2px;
+}
+
+.business-container {
+    text-align: center;
+    position: relative;
+}
+
+.business-logo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2.5em;
+    bottom: 1.4em;
+}
+
+.business-text {
+    font-family: var(--font-header);
+    font-size: 20pt;
+    letter-spacing: 2px;
+}
+
+/* =========================================
+   3. GLOBAL TABLE ARCHITECTURE
+   ========================================= */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+    border: 0.5px solid var(--border-col);
+    table-layout: auto;
+}
+
+caption {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* GLOBAL CELL STYLES */
+th, td {
+    padding: var(--pad-y) var(--pad-x);
+    text-align: left;
+    vertical-align: top;
+    border: none;
+}
+
+/* HEADER STYLES */
+th {
+    background-color: var(--header-bg);
+    border-bottom: 0.5px solid var(--border-col);
+    white-space: nowrap;
+    
+    /* Variable Header Padding */
+    padding-top: var(--header-pad-y);
+    padding-bottom: var(--header-pad-y);
+}
+
+tbody tr:first-child td {
+    padding-top: var(--spacer);
+}
+
+tbody tr:last-child td {
+    padding-bottom: var(--spacer);
+}
+
+/* =========================================
+   4. UTILITY CLASSES
+   ========================================= */
+
+/* Rule 1: KEYS (Column 1) */
+.col-key {
+    width: 1%;
+    min-width: var(--key-min-w);
+    white-space: nowrap;
+    padding-right: var(--key-gap); /* Variable Gap */
+}
+
+/* Rule 2: VALUES (Middle Columns) */
+.col-val {
+    width: auto;
+}
+
+/* Rule 3: QUANTITY / MONEY (Last Column) */
+.col-qty {
+    width: 1%;
+    white-space: nowrap;
+    min-width: var(--qty-min-w);
+    text-align: right;
+}
+
+/* Rule 4: PARTIES ALIGNMENT */
+
+/* Scenario A: 3 Columns (Standard) */
+/* Forces the "Recipient" column to take exactly the right half,
+   matching the "Tax & Compliance" block above. */
+.gst-details:not(.has-consignee) th:last-child,
+.gst-details:not(.has-consignee) td:last-child {
+    width: var(--split-align); /* 50% */
+}
+
+/* Scenario B: 4 Columns (With Consignee) */
+/* Distribute the 3 value columns equally in the remaining space. */
+.gst-details.has-consignee th:not(.col-key),
+.gst-details.has-consignee td:not(.col-key) {
+    width: 33%; 
+}
+
+/* Default utilities */
+.right { text-align: right; }
+.bold  { font-weight: 600; }
+
+/* =========================================
+   TWIN TABLE CONTAINER (The Fix)
+   ========================================= */
+
+/* 1. The Wrapper: This draws the "Outer Box" */
+.split-container {
+    display: flex;
+    width: 100%;
+    border: 0.5px solid #000; /* The rectangle border */
+    margin-bottom: 15px;
+    background-color: transparent;
+}
+
+/* 2. The Inner Tables: Reset borders so they merge seamlessly */
+.split-container table {
+    width: 50%;        /* Each side takes exactly half */
+    margin: 0;         /* No spacing between them */
+    border: none;      /* Remove individual table borders */
+    margin-bottom: 0;  /* Remove bottom spacing */
+}
+
+/* 3. Inner Headers: Ensure they align but don't double-draw borders */
+.split-container th {
+    border-top: none;  /* The container has the top border */
+    border-left: none;
+    border-right: none;
+    /* We keep border-bottom to separate the gray bar from data */
+}
+
+/* 4. Left Table Specifics: This acts as the divider */
+.split-container .left-table {
+    border-right: none; 
+}
+
+/* 5. Right Table Specifics */
+.split-container .right-table {
+    border-left: none;
+}
+
+/* Make single table width 100% inside container */
+.split-container table.full-width {
+    width: 100%;
+    border-right: none;
+}
+
+/* === SPECIFIC TABLE ADJUSTMENTS === */
+
+/* A. INVOICE DETAILS (Split Header) */
+.invoice-details-split th {
+    width: var(--split-align); /* 50% */
+    border-right: none;
+    border-left: none;
+}
+.invoice-details-split.single-col th { width: 100%; }
+
+/* B. BILLING TABLE EXCEPTIONS */
+tr.border-top td {
+    border-top: 0.5px solid var(--border-col);
+    padding-top: var(--spacer);
+    /* font-weight: 600; Removed to keep only Total bold */
+    padding-bottom: var(--pad-y);
+}
+
+.billing-table tbody tr:nth-last-child(2) td {
+    padding-bottom: var(--spacer);
+}
+
+/* C. COMPLIANCE NOTIFICATIONS */
+.lut-notification {
+    background-color: #f9f9f9;
+    border: 0.5px solid var(--border-col);
+    padding: 6px 8px;
+    font-size: 8pt;
+    margin-bottom: 10px;
+}
+
+.bank-instruction {
+    font-size: 8pt;
+    color: #444;
+    padding-top: 5px;
+}
+
+/* =========================================
+   6. SIGNATURE & FOOTER
+   ========================================= */
+.signature-container {
+    position: relative;
+    width: 30%;
+    margin-top: 2rem;
+    margin-left: auto;
+    margin-right: 2%;
+    text-align: center;
+    page-break-inside: avoid;
+}
+
+.signature-svg {
+    display: block;
+    margin: 0 auto;
+    width: 150px;
+}
+
+.signature-text {
+    margin-top: 10px;
+    font-size: 8.5pt;
+}
+
+.lut-text {
+    text-align: center;
+    font-size: 8pt;
+    font-style: italic;
+    color: #555;
+    margin-top: 5px;
+}
+

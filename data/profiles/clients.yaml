@@ -1,0 +1,85 @@
+# Sample profiles for demonstration purposes
+# Replace with actual business data in private usage
+
+# Sample consulting business profile
+.consultant_common: &consultant_common
+  name: "Demo Consulting Services Pvt. Ltd."
+  prefix: "DC"
+  currency: "INR"
+  contacts:
+    - id: "primary"
+      name: "Demo Consultant"
+      email: "consultant@example.com"
+
+consultant_delhi:
+  <<: *consultant_common
+  gstin: "07ABCDE1234F1Z5"
+  pan: "ABCDE1234F"
+  state_code: "07"
+  address: |
+    Demo Address Line 1,
+    New Delhi, DL,
+    India – 110001
+  shipping_address: |
+    Demo Address Line 1,
+    New Delhi, DL,
+    India – 110001
+
+consultant_bangalore:
+  <<: *consultant_common
+  gstin: "29ABCDE1234F1Z5"
+  pan: "ABCDE1234F"
+  state_code: "29"
+  address: |
+    Demo Address Line 1,
+    Bangalore, KA,
+    India – 560001
+
+# Sample client profiles
+.sample_client_common: &sample_client_common
+  prefix: "CL"
+  currency: "INR"
+  gst_category: "regular"
+
+client_sample_corp:
+  <<: *sample_client_common
+  name: "Sample Corporation Ltd."
+  gstin: "33FGHIJ5678K1Z5"
+  state_code: "33"
+  address: |
+    Sample Corp Address,
+    Chennai, TN,
+    India – 600001
+  contacts:
+    - id: "contact1"
+      name: "John Doe"
+      email: "john@samplecorp.example.com"
+
+client_sample_tech:
+  <<: *sample_client_common
+  name: "Sample Tech Solutions Pvt. Ltd."
+  gstin: "27FGHIJ5678K1Z5"
+  state_code: "27"
+  address: |
+    Sample Tech Address,
+    Mumbai, MH,
+    India – 400001
+  contacts:
+    - id: "contact1"
+      name: "Jane Smith"
+      email: "jane@sampletech.example.com"
+
+# Sample overseas client
+client_sample_global:
+  name: "Sample Global Inc."
+  prefix: "GL"
+  currency: "USD"
+  gst_category: "overseas"
+  state_code: "96"
+  contacts:
+    - id: "contact1"
+      name: "Bob Wilson"
+      email: "bob@sampleglobal.example.com"
+  address: |
+    123 Sample Street,
+    San Francisco, CA, USA 94102

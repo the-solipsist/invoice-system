@@ -1,0 +1,11 @@
+# Sample Invoice - Hourly Consulting
+# Synthetic data for demonstration
+
+invoice_number: "SAMPLE-002"
+contract_id: "sample_hourly_contract"
+date: "2024-06-15"
+line_items:
+  - {date: "2024-06-03", description: "Technical architecture review", hours: 6.0}
+  - {date: "2024-06-05", description: "Stakeholder interviews", hours: 4.5}
+  - {date: "2024-06-10", description: "Documentation and recommendations", hours: 8.0}
+  - {date: "2024-06-12", description: "Presentation preparation", hours: 3.5}

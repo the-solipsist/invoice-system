@@ -1,0 +1,19 @@
+# Sample contract for demonstration
+# Generic retainer agreement template
+
+id: sample_retainer_contract
+client_id: client_sample_corp
+sender_id: consultant_delhi
+bank_id: sample_bank
+work_sequence_number: '01'
+contact_id: contact1
+po_number: 'SAMPLE-PO-001'
+contract_ref: 'RETAINER-2024-001'
+service: Technology Policy Consulting
+sac_code: '998312'
+billing_preset: retainer
+contract_series: true
+billing_terms:
+  base_amount: 100000
+  excess_rate: 2000
+  threshold: 40.0

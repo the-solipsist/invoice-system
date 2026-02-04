@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Invoice {{ invoice.number }}</title>
+    <link rel="stylesheet" href="invoice.css">
+</head>
+
+<body>
+    <header>
+        <div class="header-container">
+            <div class="invoice-text">
+                {{ invoice.display_title }}
+            </div>
+            <div class="business-container">
+                {% if sender.logo_path %}
+                <img src="{{ sender.logo_path }}" alt="Logo" class="business-logo">
+                <div class="business-text">{{ sender.name }}</div>
+                {% else %}
+                <div class="business-text">{{ sender.name }}</div>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Top Section: Invoice Details (Twin Table Layout) -->
+        <div class="split-container">
+            <table class="left-table">
+                <thead>
+                    <tr>
+                        <th colspan="2">Invoice Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="col-key label">Invoice #</td>
+                        <td class="val">{{ invoice.number }}</td>
+                    </tr>
+                    <tr>
+                        <td class="col-key label">Date</td>
+                        <td class="val">{{ invoice.date }}</td>
+                    </tr>
+                    <tr>
+                        <td class="col-key label">Service</td>
+                        <td class="val">{{ invoice.service }}</td>
+                    </tr>
+
+                    {% if invoice.contract_number %}
+                    <tr>
+                        <td class="col-key label">Contract</td>
+                        <td class="val">{{ invoice.contract_number }}</td>
+                    </tr>
+                    {% endif %}
+
+                    {% if invoice.po %}
+                    <tr>
+                        <td class="col-key label">PO Number</td>
+                        <td class="val">{{ invoice.po }}</td>
+                    </tr>
+                    {% endif %}
+
+                    <tr>
+                        <td class="col-key label">Payment Terms</td>
+                        <td class="val">{{ invoice.payment_terms }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table class="right-table">
+                <thead>
+                    <tr>
+                        <th colspan="2">Tax & Compliance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if invoice.is_post_gst %}
+                    <tr>
+                        <td class="col-key label">Place of Supply</td>
+                        <td class="val">{{ invoice.place_of_supply or "--" }}</td>
+                    </tr>
+                    <tr>
+                        <td class="col-key label">SAC Code</td>
+                        <td class="val">{{ invoice.sac or "--" }}</td>
+                    </tr>
+
+                    <tr>
+                        <td class="col-key label">Reverse Charge</td>
+                        <td class="val">
+                            {% if sender.gstin %}{{ invoice.reverse_charge or "No" }}{% else %}--{% endif %}
+                        </td>
+                    </tr>
+                    {% endif %}
+
+                    <tr>
+                        <td class="col-key label">{% if client.gst_category == 'overseas' %}PAN (Tax ID){% else %}PAN{%
+                            endif %}</td>
+                        <td class="val">{{ sender.pan }}</td>
+                    </tr>
+
+                    {% if financials.lut_text %}
+                    <tr>
+                        <td colspan="2" class="val" style="font-size: 7pt; font-style: italic;">
+                            {{ financials.lut_text }}
+                        </td>
+                    </tr>
+                    {% endif %}
+
+                    {% if invoice.exchange_rate %}
+                    <tr>
+                        <td class="col-key label">RBI reference rate for INR/{{ invoice.currency }}</td>
+                        <td class="val">{{ invoice.exchange_rate }}</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Parties / GST Details -->
+        <table class="gst-details {% if client.shipping_address %}has-consignee{% endif %}">
+            <caption>Parties</caption>
+            <thead>
+                <tr class="section-header">
+                    <th class="col-key">Parties</th>
+                    <th>Supplier</th>
+                    {% if client.shipping_address %}
+                    <th>Bill to</th>
+                    <th>Ship to</th>
+                    {% else %}
+                    <th>Recipient</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="col-key">Name</td>
+                    <td>{{ sender.name }}</td>
+                    <td>{{ client.name }}</td>
+                    {% if client.shipping_address %}<td>{{ client.name }}</td>{% endif %}
+                </tr>
+                <tr>
+                    <td class="col-key">Address</td>
+                    <td>{{ sender.address | nl2br }}</td>
+                    <td>{{ client.address | nl2br }}</td>
+                    {% if client.shipping_address %}<td>{{ client.shipping_address | nl2br }}</td>{% endif %}
+                </tr>
+                <tr>
+                    <td class="col-key">Contact</td>
+                    <td>
+                        {% set contact_display = "" %}
+                        {% if sender.legal_name and sender.contact_email %}
+                        {% set contact_display = sender.legal_name ~ " / " ~ sender.contact_email %}
+                        {% elif sender.contact_email %}
+                        {% set contact_display = sender.name ~ " / " ~ sender.contact_email %}
+                        {% elif sender.contact_email %}
+                        {% set contact_display = sender.contact_email %}
+                        {% elif sender.legal_name %}
+                        {% set contact_display = sender.legal_name %}
+                        {% endif %}
+                        {{ contact_display or " -- " }}
+                    </td>
+                    <td>{{ client.contact or " -- " }}</td>
+                    {% if client.shipping_address %}<td>{{ client.contact or " -- " }}</td>{% endif %}
+                </tr>
+                {% if sender.gstin and invoice.is_post_gst %}
+                <tr>
+                    <td class="col-key">GSTIN</td>
+                    <td>{{ sender.gstin }}</td>
+                    <td>{{ client.gstin or "N/A" }}</td>
+                    {% if client.shipping_address %}<td> -- </td>{% endif %}
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+
+        <!-- Work Items -->
+        <table class="work-items">
+            <caption>Work Items</caption>
+            <thead>
+                <tr class="section-header">
+                    <th class="col-key">{{ headers.work.col1 }}</th>
+                    <th>{{ headers.work.col2 }}</th>
+                    <th class="col-qty">{{ headers.work.col3 }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in table_view.rows %}
+                <tr>
+                    {% for cell in row %}
+                    {% set col_type = table_view.columns[loop.index0] %}
+                    <td class="{% if loop.first %}col-key{% elif col_type == 'quantity' or col_type == 'amount' %}col-qty{% else %}col-val{% endif %}">
+                        {{ cell | safe }}
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Billing -->
+        <table class="billing-table">
+            <caption>Billing</caption>
+            <thead>
+                <tr class="section-header">
+                    <th class="col-key">{{ headers.billing.col1 }}</th>
+                    <th>{{ headers.billing.col2 }}</th>
+                    <th class="col-qty">{{ headers.billing.col3 }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for line in financials.billing_lines %}
+                <tr>
+                    <td class="col-key">{{ line.label }}</td>
+                    <td>{{ line.details }}</td>
+                    <td class="col-qty">{{ line.amount | currency }}</td>
+                </tr>
+                {% endfor %}
+
+                {% if financials.show_subtotal %}
+                <tr class="border-top bold">
+                    <td colspan="2">Sub-total</td>
+                    <td class="col-qty">{{ financials.subtotal | currency }}</td>
+                </tr>
+                {% endif %}
+
+                {% for tax in financials.tax_lines %}
+                <tr>
+                    <td class="col-key">{{ tax.label }}</td>
+                    <td>{{ tax.rate_desc }}</td>
+                    <td class="col-qty">{{ tax.amount | currency }}</td>
+                </tr>
+                {% endfor %}
+
+                <tr class="bold border-top">
+                    <td colspan="2">Total payable</td>
+                    <td class="col-qty">{{ financials.final_total | currency }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Payment Details (Moved to Bottom) -->
+        <table class="payment-details">
+            <thead>
+                <tr class="section-header">
+                    <th colspan="2">Payment details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="col-key">Account Holder</td>
+                    <td>{{ bank.account_holder }}</td>
+                </tr>
+                <tr>
+                    <td class="col-key">Account Number</td>
+                    <td>{{ bank.account_number }}</td>
+                </tr>
+                {% if bank.swift %}
+                <tr>
+                    <td class="col-key">SWIFT Code</td>
+                    <td>{{ bank.swift }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td class="col-key">IFS Code</td>
+                    <td>{{ bank.ifsc or "N/A" }}</td>
+                </tr>
+                {% endif %}
+                <tr>
+                    <td class="col-key">Bank Address</td>
+                    <td>
+                        {{ bank.name }}<br>
+                        {% if bank.branch %}
+                        {{ bank.branch }}
+                        {% else %}
+                        {{ bank.address }}, {{ bank.city }}<br>
+                        {{ bank.state }} - {{ bank.pincode }}{% if bank.country %}, {{ bank.country }}{% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% if bank.identification_no %}
+                <tr>
+                    <td class="col-key">Beneficiary ID</td>
+                    <td>{{ bank.identification_no }}</td>
+                </tr>
+                {% endif %}
+
+                {% if bank.note %}
+                <tr>
+                    <td colspan="2" class="bank-instruction">
+                        <em>Note: {{ bank.note }}</em>
+                    </td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+
+    </main>
+
+    <footer>
+        <div class="signature-container">
+            <img src="{{ sender.signature_path }}" alt="Signature" class="signature-svg">
+            <div class="signature-text">
+                {{ sender.legal_name }}<br />
+                {{ sender.name }}
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

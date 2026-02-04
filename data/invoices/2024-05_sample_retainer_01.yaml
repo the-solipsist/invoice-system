@@ -1,0 +1,11 @@
+# Sample Invoice - Retainer (Month 1)
+# Synthetic data for demonstration
+
+invoice_number: "SAMPLE-001"
+contract_id: "sample_retainer_contract"
+date: "2024-05-31"
+line_items:
+  - {owner: "DC", description: "Strategic policy review", hours: 8.5}
+  - {owner: "DC", description: "Client meetings and coordination", hours: 4.0}
+  - {owner: "DC", description: "Research and analysis", hours: 12.0}
+  - {owner: "DC", description: "Report preparation", hours: 6.0}

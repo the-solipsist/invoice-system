@@ -1,0 +1,23 @@
+# Sample self/business profile for demonstration
+# Replace with actual business details in private usage
+
+sender_profile:
+  legal_name: "Demo Consulting Services Pvt. Ltd."
+  gstin: "07ABCDE1234F1Z5"
+  pan: "ABCDE1234F"
+  state_code: "07"
+  address: |
+    Demo Address Line 1,
+    New Delhi, DL,
+    India – 110001
+  
+  logo_path: null
+  signature_path: null
+  contact_email: "consultant@example.com"
+  
+  # LUT (Letter of Undertaking) for exports
+  lut_number: "ZD1234567890123"
+  lut_expiry: "2026-03-31"
+  
+  # Bank account references (see banks.yaml for details)
+  default_bank: "sample_bank"

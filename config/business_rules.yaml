@@ -1,0 +1,82 @@
+# ==========================================
+# BUSINESS RULES CONFIGURATION
+# ==========================================
+
+# 1. GST Standards
+tax_rules:
+  default_gst_rate: 0.18
+  cgst_rate: 0.09
+  sgst_rate: 0.09
+  igst_rate: 0.18
+  gst_threshold_date: "2024-04-16"
+  default_sac_code: "998399"
+  lut_text_template: "Supply meant for export under LUT No. {lut_number} without payment of integrated tax."
+
+# 2. State Code Mapping
+state_map:
+  "01": "Jammu & Kashmir"
+  "02": "Himachal Pradesh"
+  "03": "Punjab"
+  "04": "Chandigarh"
+  "05": "Uttarakhand"
+  "06": "Haryana"
+  "07": "Delhi"
+  "08": "Rajasthan"
+  "09": "Uttar Pradesh"
+  "10": "Bihar"
+  "11": "Sikkim"
+  "12": "Arunachal Pradesh"
+  "13": "Nagaland"
+  "14": "Manipur"
+  "15": "Mizoram"
+  "16": "Tripura"
+  "17": "Meghalaya"
+  "18": "Assam"
+  "19": "West Bengal"
+  "20": "Jharkhand"
+  "21": "Odisha"
+  "22": "Chhattisgarh"
+  "23": "Madhya Pradesh"
+  "24": "Gujarat"
+  "25": "Daman & Diu"
+  "26": "Dadra & Nagar Haveli"
+  "27": "Maharashtra"
+  "29": "Karnataka"
+  "30": "Goa"
+  "31": "Lakshadweep"
+  "32": "Kerala"
+  "33": "Tamil Nadu"
+  "34": "Puducherry"
+  "35": "Andaman & Nicobar Islands"
+  "36": "Telangana"
+  "37": "Andhra Pradesh"
+  "38": "Ladakh"
+  "96": "Outside India"
+  "97": "Other Territory"
+
+# 3. Bank Account Selection Logic
+default_banks:
+  overseas: "sample_bank_international"
+  default: "sample_bank"
+
+# 4. Hledger Accounting Rules
+hledger:
+  account_width: 50
+  client_slugs:
+    client_sample_corp: "SampleCorp"
+    client_sample_tech: "SampleTech"
+    client_sample_global: "SampleGlobal"
+  bank_aliases:
+    "SAMPLE-IN": "000000000000"
+
+# 5. GSTR-1 Reporting Defaults
+gstr1:
+  version: "GSTR1_V1.0"
+  hash_prefix: "V04||"
+  default_hsn_desc: "Other professional, technical and business services nowhere else classified"
+  default_user_desc: "Consulting services"
+  default_uqc: "NA"
+
+# 6. Invoice Defaults
+invoice_defaults:
+  payment_terms: "Net 30"
