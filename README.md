@@ -86,6 +86,26 @@ See `data/yaml_templates/` for examples.
 3. Update configuration in `config/` for your jurisdiction
 4. Test thoroughly before using for actual business
 
+## AI-Generated Code
+
+⚠️ **This codebase was generated using AI with extensive human prompting.**
+
+The majority of this code was written by AI coding assistants, primarily:
+- **Gemini 3 Pro / Flash** (Google)
+- **GLM 4.7** (Zhipu AI)
+- **Kimi K2.5** (Moonshot AI)
+- **Claude Sonnet 4.5** (Anthropic)
+
+Through extensive prompting, architectural guidance, and iterative refinement by me (the human), these AI systems generated the code, tests, and documentation you see here. While the code is functional and well-structured, it reflects AI-generated patterns and may contain assumptions or approaches that differ from manually-written code.
+
+**Implications:**
+- Code may follow AI-preferred patterns over human conventions
+- Error handling and edge cases may reflect training data biases
+- Architecture decisions were guided by AI suggestions within human constraints
+- Documentation was AI-generated based on human specifications
+
+Use this codebase with the understanding that it represents an AI-human collaboration, not purely human authorship.
+
 ## License
 
 [Add your license here - e.g., MIT, Apache-2.0, or proprietary]
